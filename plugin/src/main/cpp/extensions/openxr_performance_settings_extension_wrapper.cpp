@@ -58,10 +58,8 @@ OpenXRPerformanceSettingsExtensionWrapper::~OpenXRPerformanceSettingsExtensionWr
 
 void OpenXRPerformanceSettingsExtensionWrapper::_bind_methods() {
     ClassDB::bind_method(D_METHOD("is_performance_settings_supported"), &OpenXRPerformanceSettingsExtensionWrapper::is_performance_settings_supported);
-    ClassDB::bind_method(D_METHOD("set_performance_level", "domain", "level"), &OpenXRPerformanceSettingsExtensionWrapper::set_performance_level);
-
-    BIND_ENUM_CONSTANT(PERF_SETTINGS_DOMAIN_CPU);
-    BIND_ENUM_CONSTANT(PERF_SETTINGS_DOMAIN_GPU);
+    ClassDB::bind_method(D_METHOD("set_cpu_level", "level"), &OpenXRPerformanceSettingsExtensionWrapper::set_cpu_level);
+    ClassDB::bind_method(D_METHOD("set_gpu_level", "level"), &OpenXRPerformanceSettingsExtensionWrapper::set_gpu_level);
 
     BIND_ENUM_CONSTANT(PERF_SETTINGS_LEVEL_POWER_SAVINGS);
     BIND_ENUM_CONSTANT(PERF_SETTINGS_LEVEL_SUSTAINED_LOW);
@@ -100,46 +98,50 @@ bool OpenXRPerformanceSettingsExtensionWrapper::initialize_performance_settings_
     return true;
 }
 
-bool OpenXRPerformanceSettingsExtensionWrapper::set_performance_level(PerfSettingsDomain p_domain, PerfSettingsLevel p_level) {
+XrPerfSettingsLevelEXT level_to_openxr(PerfSettingsLevel p_level) {
+    // Convert our enum to OpenXR enum
+    switch (p_level) {
+        case PERF_SETTINGS_LEVEL_POWER_SAVINGS:
+            return XR_PERF_SETTINGS_LEVEL_POWER_SAVINGS_EXT;
+            break;
+        case PERF_SETTINGS_LEVEL_SUSTAINED_LOW:
+            return XR_PERF_SETTINGS_LEVEL_SUSTAINED_LOW_EXT;
+            break;
+        case PERF_SETTINGS_LEVEL_SUSTAINED_HIGH:
+            return XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT;
+        case PERF_SETTINGS_LEVEL_BOOST:
+            return XR_PERF_SETTINGS_LEVEL_BOOST_EXT;
+        default:
+            UtilityFunctions::printerr("Invalid performance settings level");
+            return XR_PERF_SETTINGS_LEVEL_POWER_SAVINGS_EXT;
+    }
+}
+
+
+bool OpenXRPerformanceSettingsExtensionWrapper::set_gpu_level(PerfSettingsLevel p_level) {
     if (!performance_settings_ext) {
         return false;
     }
 
-    // Convert our enum to OpenXR enum
-    XrPerfSettingsDomainEXT domain;
-    switch (p_domain) {
-        case PERF_SETTINGS_DOMAIN_CPU:
-            domain = XR_PERF_SETTINGS_DOMAIN_CPU_EXT;
-            break;
-        case PERF_SETTINGS_DOMAIN_GPU:
-            domain = XR_PERF_SETTINGS_DOMAIN_GPU_EXT;
-            break;
-        default:
-            UtilityFunctions::printerr("Invalid performance settings domain");
-            return false;
+    XrPerfSettingsLevelEXT level = level_to_openxr(p_level);
+
+    XrResult result = xrPerfSettingsSetPerformanceLevelEXT(SESSION, XR_PERF_SETTINGS_DOMAIN_GPU_EXT, level);
+    if (XR_FAILED(result)) {
+        UtilityFunctions::printerr(vformat("xrPerfSettingsSetPerformanceLevelEXT failed: %s", get_openxr_api()->get_error_string(result)));
+        return false;
     }
 
-    // Convert our enum to OpenXR enum
-    XrPerfSettingsLevelEXT level;
-    switch (p_level) {
-        case PERF_SETTINGS_LEVEL_POWER_SAVINGS:
-            level = XR_PERF_SETTINGS_LEVEL_POWER_SAVINGS_EXT;
-            break;
-        case PERF_SETTINGS_LEVEL_SUSTAINED_LOW:
-            level = XR_PERF_SETTINGS_LEVEL_SUSTAINED_LOW_EXT;
-            break;
-        case PERF_SETTINGS_LEVEL_SUSTAINED_HIGH:
-            level = XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT;
-            break;
-        case PERF_SETTINGS_LEVEL_BOOST:
-            level = XR_PERF_SETTINGS_LEVEL_BOOST_EXT;
-            break;
-        default:
-            UtilityFunctions::printerr("Invalid performance settings level");
-            return false;
+    return true;
+}
+
+bool OpenXRPerformanceSettingsExtensionWrapper::set_cpu_level(PerfSettingsLevel p_level) {
+    if (!performance_settings_ext) {
+        return false;
     }
 
-    XrResult result = xrPerfSettingsSetPerformanceLevelEXT(SESSION, domain, level);
+    XrPerfSettingsLevelEXT level = level_to_openxr(p_level);
+
+    XrResult result = xrPerfSettingsSetPerformanceLevelEXT(SESSION, XR_PERF_SETTINGS_DOMAIN_CPU_EXT, level);
     if (XR_FAILED(result)) {
         UtilityFunctions::printerr(vformat("xrPerfSettingsSetPerformanceLevelEXT failed: %s", get_openxr_api()->get_error_string(result)));
         return false;

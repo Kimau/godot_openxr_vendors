@@ -38,12 +38,6 @@
 
 using namespace godot;
 
-// Performance domains for easier access
-enum PerfSettingsDomain {
-    PERF_SETTINGS_DOMAIN_CPU = 0,
-    PERF_SETTINGS_DOMAIN_GPU = 1
-};
-
 // Performance levels for easier access
 enum PerfSettingsLevel {
     PERF_SETTINGS_LEVEL_POWER_SAVINGS = 0,    // Maximum power savings
@@ -63,7 +57,8 @@ public:
     static OpenXRPerformanceSettingsExtensionWrapper *get_singleton();
 
     bool is_performance_settings_supported() const { return performance_settings_ext; }
-    bool set_performance_level(PerfSettingsDomain p_domain, PerfSettingsLevel p_level);
+    bool set_cpu_level(PerfSettingsLevel p_level);
+    bool set_gpu_level(PerfSettingsLevel p_level); 
 
     OpenXRPerformanceSettingsExtensionWrapper();
     ~OpenXRPerformanceSettingsExtensionWrapper();
@@ -85,7 +80,6 @@ private:
     bool performance_settings_ext = false;
 };
 
-VARIANT_ENUM_CAST(PerfSettingsDomain);
 VARIANT_ENUM_CAST(PerfSettingsLevel);
 
 #endif // OPENXR_PERFORMANCE_SETTINGS_EXTENSION_WRAPPER_H

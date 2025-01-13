@@ -127,9 +127,10 @@ static void add_plugin_core_settings() {
 	define_global_bool(project_settings, "xr/openxr/extensions/fb_spatial", true);
 	define_global_bool(project_settings, "xr/openxr/extensions/htc_facial_tracking", true);
 	define_global_bool(project_settings, "xr/openxr/extensions/htc_passthrough", true);
+	define_global_bool(project_settings, "xr/openxr/extensions/performance_settings", true);
 }
 
-static void add_plugin_project_settings() {
+void add_plugin_project_settings() {
 	ProjectSettings *project_settings = ProjectSettings::get_singleton();
 	if (project_settings == nullptr) {
 		return;
@@ -158,106 +159,74 @@ void initialize_plugin_module(ModuleInitializationLevel p_level) {
 		case MODULE_INITIALIZATION_LEVEL_CORE: {
 			add_plugin_core_settings();
 
-			if (global_bool_get("xr/openxr/extensions/fb_passthrough")) {
-				ClassDB::register_class<OpenXRFbPassthroughExtensionWrapper>();
-				OpenXRFbPassthroughExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRFbPassthroughExtensionWrapper>();
+			OpenXRFbPassthroughExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/fb_render_model")) {
-				ClassDB::register_class<OpenXRFbRenderModelExtensionWrapper>();
-				OpenXRFbRenderModelExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRFbRenderModelExtensionWrapper>();
+			OpenXRFbRenderModelExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/fb_scene_capture")) {
-				ClassDB::register_class<OpenXRFbSceneCaptureExtensionWrapper>();
-				OpenXRFbSceneCaptureExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRFbSceneCaptureExtensionWrapper>();
+			OpenXRFbSceneCaptureExtensionWrapper::get_singleton()->register_extension_wrapper();
+		
+			ClassDB::register_class<OpenXRFbSpatialEntityExtensionWrapper>();
+			OpenXRFbSpatialEntityExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/fb_spatial")) {
-				ClassDB::register_class<OpenXRFbSpatialEntityExtensionWrapper>();
-				OpenXRFbSpatialEntityExtensionWrapper::get_singleton()->register_extension_wrapper();
+			ClassDB::register_class<OpenXRFbSpatialEntitySharingExtensionWrapper>();
+			OpenXRFbSpatialEntitySharingExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-				ClassDB::register_class<OpenXRFbSpatialEntitySharingExtensionWrapper>();
-				OpenXRFbSpatialEntitySharingExtensionWrapper::get_singleton()->register_extension_wrapper();
+			ClassDB::register_class<OpenXRFbSpatialEntityStorageExtensionWrapper>();
+			OpenXRFbSpatialEntityStorageExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-				ClassDB::register_class<OpenXRFbSpatialEntityStorageExtensionWrapper>();
-				OpenXRFbSpatialEntityStorageExtensionWrapper::get_singleton()->register_extension_wrapper();
+			ClassDB::register_class<OpenXRFbSpatialEntityStorageBatchExtensionWrapper>();
+			OpenXRFbSpatialEntityStorageBatchExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-				ClassDB::register_class<OpenXRFbSpatialEntityStorageBatchExtensionWrapper>();
-				OpenXRFbSpatialEntityStorageBatchExtensionWrapper::get_singleton()->register_extension_wrapper();
+			ClassDB::register_class<OpenXRFbSpatialEntityQueryExtensionWrapper>();
+			OpenXRFbSpatialEntityQueryExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-				ClassDB::register_class<OpenXRFbSpatialEntityQueryExtensionWrapper>();
-				OpenXRFbSpatialEntityQueryExtensionWrapper::get_singleton()->register_extension_wrapper();
+			ClassDB::register_class<OpenXRFbSpatialEntityContainerExtensionWrapper>();
+			OpenXRFbSpatialEntityContainerExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-				ClassDB::register_class<OpenXRFbSpatialEntityContainerExtensionWrapper>();
-				OpenXRFbSpatialEntityContainerExtensionWrapper::get_singleton()->register_extension_wrapper();
+			ClassDB::register_class<OpenXRFbSpatialEntityUserExtensionWrapper>();
+			OpenXRFbSpatialEntityUserExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-				ClassDB::register_class<OpenXRFbSpatialEntityUserExtensionWrapper>();
-				OpenXRFbSpatialEntityUserExtensionWrapper::get_singleton()->register_extension_wrapper();
+			ClassDB::register_class<OpenXRMetaSpatialEntityMeshExtensionWrapper>();
+			OpenXRMetaSpatialEntityMeshExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-				ClassDB::register_class<OpenXRMetaSpatialEntityMeshExtensionWrapper>();
-				OpenXRMetaSpatialEntityMeshExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRFbSceneExtensionWrapper>();
+			OpenXRFbSceneExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/fb_scene")) {
-				ClassDB::register_class<OpenXRFbSceneExtensionWrapper>();
-				OpenXRFbSceneExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRFbFaceTrackingExtensionWrapper>();
+			OpenXRFbFaceTrackingExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/fb_face_tracking")) {
-				ClassDB::register_class<OpenXRFbFaceTrackingExtensionWrapper>();
-				OpenXRFbFaceTrackingExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRFbBodyTrackingExtensionWrapper>();
+			OpenXRFbBodyTrackingExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/fb_body_tracking")) {
-				ClassDB::register_class<OpenXRFbBodyTrackingExtensionWrapper>();
-				OpenXRFbBodyTrackingExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRFbHandTrackingMeshExtensionWrapper>();
+			OpenXRFbHandTrackingMeshExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/fb_hand_tracking_mesh")) {
-				ClassDB::register_class<OpenXRFbHandTrackingMeshExtensionWrapper>();
-				OpenXRFbHandTrackingMeshExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRFbHandTrackingAimExtensionWrapper>();
+			OpenXRFbHandTrackingAimExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/fb_hand_tracking_aim")) {
-				ClassDB::register_class<OpenXRFbHandTrackingAimExtensionWrapper>();
-				OpenXRFbHandTrackingAimExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRFbHandTrackingCapsulesExtensionWrapper>();
+			OpenXRFbHandTrackingCapsulesExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/fb_hand_tracking_capsules")) {
-				ClassDB::register_class<OpenXRFbHandTrackingCapsulesExtensionWrapper>();
-				OpenXRFbHandTrackingCapsulesExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRFbCompositionLayerSecureContentExtensionWrapper>();
+			OpenXRFbCompositionLayerSecureContentExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/fb_composition_layer_secure_content")) {
-				ClassDB::register_class<OpenXRFbCompositionLayerSecureContentExtensionWrapper>();
-				OpenXRFbCompositionLayerSecureContentExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRFbCompositionLayerAlphaBlendExtensionWrapper>();
+			OpenXRFbCompositionLayerAlphaBlendExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/fb_composition_layer_alpha_blend")) {
-				ClassDB::register_class<OpenXRFbCompositionLayerAlphaBlendExtensionWrapper>();
-				OpenXRFbCompositionLayerAlphaBlendExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRFbCompositionLayerSettingsExtensionWrapper>();
+			OpenXRFbCompositionLayerSettingsExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/fb_composition_layer_settings")) {
-				ClassDB::register_class<OpenXRFbCompositionLayerSettingsExtensionWrapper>();
-				OpenXRFbCompositionLayerSettingsExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRHtcFacialTrackingExtensionWrapper>();
+			OpenXRHtcFacialTrackingExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/htc_facial_tracking")) {
-				ClassDB::register_class<OpenXRHtcFacialTrackingExtensionWrapper>();
-				OpenXRHtcFacialTrackingExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRHtcPassthroughExtensionWrapper>();
+			OpenXRHtcPassthroughExtensionWrapper::get_singleton()->register_extension_wrapper();
 
-			if (global_bool_get("xr/openxr/extensions/htc_passthrough")) {
-				ClassDB::register_class<OpenXRHtcPassthroughExtensionWrapper>();
-				OpenXRHtcPassthroughExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
-
-			if (global_bool_get("xr/openxr/extensions/performance_settings")) {
-				ClassDB::register_class<OpenXRPerformanceSettingsExtensionWrapper>();
-				OpenXRPerformanceSettingsExtensionWrapper::get_singleton()->register_extension_wrapper();
-			}
+			ClassDB::register_class<OpenXRPerformanceSettingsExtensionWrapper>();
+			OpenXRPerformanceSettingsExtensionWrapper::get_singleton()->register_extension_wrapper();
 
 		} break;
 
@@ -266,6 +235,7 @@ void initialize_plugin_module(ModuleInitializationLevel p_level) {
 
 		case MODULE_INITIALIZATION_LEVEL_SCENE: {
 			add_plugin_project_settings();
+			
 
 			if (global_bool_get("xr/openxr/extensions/fb_passthrough")) {
 				Engine::get_singleton()->register_singleton("OpenXRFbPassthroughExtensionWrapper", OpenXRFbPassthroughExtensionWrapper::get_singleton());
@@ -312,6 +282,7 @@ void initialize_plugin_module(ModuleInitializationLevel p_level) {
 				Engine::get_singleton()->register_singleton("OpenXRHtcPassthroughExtensionWrapper", OpenXRHtcPassthroughExtensionWrapper::get_singleton());
 			}
 
+		
 			if (global_bool_get("xr/openxr/extensions/performance_settings")) {
 				Engine::get_singleton()->register_singleton("OpenXRPerformanceSettingsExtensionWrapper", OpenXRPerformanceSettingsExtensionWrapper::get_singleton());
 			}
