@@ -67,6 +67,7 @@
 #include "extensions/openxr_htc_facial_tracking_extension_wrapper.h"
 #include "extensions/openxr_htc_passthrough_extension_wrapper.h"
 #include "extensions/openxr_meta_spatial_entity_mesh_extension_wrapper.h"
+#include "extensions/openxr_performance_settings_extension_wrapper.h"
 
 #include "classes/openxr_fb_hand_tracking_mesh.h"
 #include "classes/openxr_fb_passthrough_geometry.h"
@@ -253,6 +254,11 @@ void initialize_plugin_module(ModuleInitializationLevel p_level) {
 				OpenXRHtcPassthroughExtensionWrapper::get_singleton()->register_extension_wrapper();
 			}
 
+			if (global_bool_get("xr/openxr/extensions/performance_settings")) {
+				ClassDB::register_class<OpenXRPerformanceSettingsExtensionWrapper>();
+				OpenXRPerformanceSettingsExtensionWrapper::get_singleton()->register_extension_wrapper();
+			}
+
 		} break;
 
 		case MODULE_INITIALIZATION_LEVEL_SERVERS:
@@ -306,6 +312,10 @@ void initialize_plugin_module(ModuleInitializationLevel p_level) {
 				Engine::get_singleton()->register_singleton("OpenXRHtcPassthroughExtensionWrapper", OpenXRHtcPassthroughExtensionWrapper::get_singleton());
 			}
 
+			if (global_bool_get("xr/openxr/extensions/performance_settings")) {
+				Engine::get_singleton()->register_singleton("OpenXRPerformanceSettingsExtensionWrapper", OpenXRPerformanceSettingsExtensionWrapper::get_singleton());
+			}
+
 			// Register classes
 			// Always register these classes, even if the extensions are disabled
 			ClassDB::register_class<OpenXRFbHandTrackingMesh>();
@@ -318,7 +328,6 @@ void initialize_plugin_module(ModuleInitializationLevel p_level) {
 			ClassDB::register_class<OpenXRFbSpatialEntityQuery>();
 			ClassDB::register_class<OpenXRFbSpatialEntityUser>();
 			ClassDB::register_class<OpenXRMetaPassthroughColorLut>();
-
 		} break;
 
 		case MODULE_INITIALIZATION_LEVEL_EDITOR: {
