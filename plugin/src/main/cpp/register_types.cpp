@@ -86,6 +86,64 @@
 
 using namespace godot;
 
+
+static void define_global_bool(ProjectSettings *project_settings, const String &p_name, bool p_default_value) {
+	if (!project_settings->has_setting(p_name)) {
+		project_settings->set_setting(p_name, p_default_value);
+	}
+
+	project_settings->set_initial_value(p_name, true);
+	project_settings->set_as_basic(p_name, false);
+	Dictionary property_info;
+	property_info["name"] = p_name;
+	property_info["type"] = Variant::Type::BOOL;
+	property_info["hint"] = PROPERTY_HINT_NONE;
+	project_settings->add_property_info(property_info);
+}
+
+static void add_plugin_core_settings() {
+    ProjectSettings *project_settings = ProjectSettings::get_singleton();
+    if (project_settings == nullptr) {
+        return;
+    }
+
+    define_global_bool(project_settings, "xr/xrvendor/hybrid_app", false);
+
+    // Meta/FB Base Features
+    define_global_bool(project_settings, "xr/xrvendor/meta/body_tracking", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/face_tracking", false);
+
+    // Meta/FB Hand Tracking Suite
+    define_global_bool(project_settings, "xr/xrvendor/meta/hand_tracking/aim", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/hand_tracking/capsules", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/hand_tracking/mesh", false);
+
+    // Meta/FB Composition & Rendering
+    define_global_bool(project_settings, "xr/xrvendor/meta/composition/alpha_blend", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/composition/secure_content", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/composition/layer_settings", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/recommended_layer_resolution", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/android_surface_swapchain", false);
+
+    // Meta/FB Scene & Spatial Features
+    define_global_bool(project_settings, "xr/xrvendor/meta/spatial/core", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/spatial/sharing", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/spatial/storage_batch", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/spatial/user", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/spatial/mesh", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/scene/capture", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/scene/core", false);
+
+    // Meta/FB Passthrough & Models
+    define_global_bool(project_settings, "xr/xrvendor/meta/passthrough", false);
+    define_global_bool(project_settings, "xr/xrvendor/meta/render_model", false);
+
+    // HTC Extensions
+    define_global_bool(project_settings, "xr/xrvendor/htc/facial_tracking", false);
+    define_global_bool(project_settings, "xr/xrvendor/htc/passthrough", false);
+}
+
+
 void add_plugin_project_settings(ProjectSettings *project_settings) {
 	{
 		// Add the 'automatically_request_runtime_permissions' project setting
@@ -153,6 +211,8 @@ void add_plugin_project_settings(ProjectSettings *project_settings) {
 void initialize_plugin_module(ModuleInitializationLevel p_level) {
 	switch (p_level) {
 		case MODULE_INITIALIZATION_LEVEL_CORE: {
+			add_plugin_core_settings();
+
 			ClassDB::register_class<OpenXRFbPassthroughExtensionWrapper>();
 			OpenXRFbPassthroughExtensionWrapper::get_singleton()->register_extension_wrapper();
 
