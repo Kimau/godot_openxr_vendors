@@ -293,7 +293,7 @@ void OpenXRFbPassthroughExtensionWrapper::unregister_geometry_node(OpenXRFbPasst
 
 void OpenXRFbPassthroughExtensionWrapper::start_passthrough() {
 	if (passthrough_handle == XR_NULL_HANDLE) {
-		UtilityFunctions::print("Cannot start passthrough before passthrough handle is created");
+		// SPAMMY UtilityFunctions::print("Cannot start passthrough before passthrough handle is created");
 		return;
 	}
 
@@ -304,6 +304,7 @@ void OpenXRFbPassthroughExtensionWrapper::start_passthrough() {
 		return;
 	}
 
+	UtilityFunctions::print("Started Passthrough");
 	passthrough_started = true;
 }
 
