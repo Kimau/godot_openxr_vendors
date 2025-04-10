@@ -92,7 +92,7 @@ static void define_global_bool(ProjectSettings *project_settings, const String &
 		project_settings->set_setting(p_name, p_default_value);
 	}
 
-	project_settings->set_initial_value(p_name, true);
+	project_settings->set_initial_value(p_name, p_default_value);
 	project_settings->set_as_basic(p_name, false);
 	Dictionary property_info;
 	property_info["name"] = p_name;
