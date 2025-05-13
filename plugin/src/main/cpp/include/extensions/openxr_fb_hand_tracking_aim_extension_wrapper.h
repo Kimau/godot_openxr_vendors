@@ -39,10 +39,6 @@
 
 using namespace godot;
 
-namespace godot {
-    class ProjectSettings;
-}
-
 // Wrapper for the set of Facebook XR hand tracking aim extension.
 class OpenXRFbHandTrackingAimExtensionWrapper : public OpenXRExtensionWrapperExtension {
 	GDCLASS(OpenXRFbHandTrackingAimExtensionWrapper, OpenXRExtensionWrapperExtension);
@@ -65,8 +61,6 @@ public:
 	}
 
 	void _on_process() override;
-
-	static void add_project_setting(ProjectSettings *project_settings);
 
 	static OpenXRFbHandTrackingAimExtensionWrapper *get_singleton();
 

@@ -90,13 +90,6 @@ PackedStringArray OpenXRFbHandTrackingAimExtensionWrapper::_get_suggested_tracke
 }
 
 void OpenXRFbHandTrackingAimExtensionWrapper::_on_state_ready() {
-	// It would be great to not even request the extension, but the ProjectSettings singleton isn't available early enough.
-	ProjectSettings *project_settings = ProjectSettings::get_singleton();
-	bool is_project_setting_enabled = (bool)project_settings->get_setting_with_override("xr/openxr/extensions/hand_tracking") && (bool)project_settings->get_setting_with_override("xr/openxr/extensions/hand_tracking_aim");
-	if (!is_project_setting_enabled) {
-		fb_hand_tracking_aim_ext = false;
-	}
-
 	if (!is_enabled()) {
 		return;
 	}
@@ -187,19 +180,4 @@ void OpenXRFbHandTrackingAimExtensionWrapper::_on_process() {
 			trackers[i]->set_input("system_gesture", (bool)(aim_state[i].status & XR_HAND_TRACKING_AIM_SYSTEM_GESTURE_BIT_FB));
 		}
 	}
-}
-
-void OpenXRFbHandTrackingAimExtensionWrapper::add_project_setting(ProjectSettings *project_settings) {
-	String p_name = "xr/openxr/extensions/hand_tracking_aim";
-	if (!project_settings->has_setting(p_name)) {
-		project_settings->set_setting(p_name, false);
-	}
-
-	project_settings->set_initial_value(p_name, false);
-	project_settings->set_as_basic(p_name, true);
-	Dictionary property_info;
-	property_info["name"] = p_name;
-	property_info["type"] = Variant::Type::BOOL;
-	property_info["hint"] = PROPERTY_HINT_NONE;
-	project_settings->add_property_info(property_info);
 }
